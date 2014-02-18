@@ -2,6 +2,9 @@ d3.profile = function() {
 
     var margin = {top: 20, right: 20, bottom: 30, left: 50};
 
+    // if true, no axis labels are displayed
+    var light = false;
+
     function profile(g) {
         g.each(function(d, i) {
             var g = d3.select(this);
@@ -23,6 +26,11 @@ d3.profile = function() {
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .orient("left");
+
+            if (light) {
+                xAxis.ticks(0);
+                yAxis.ticks(0);
+            }
 
             var area = d3.svg.area()
                 .x(function(d) { return x(d.dist); })
@@ -73,6 +81,13 @@ d3.profile = function() {
                 );
         });
     }
+
+    profile.light = function(x) {
+        if (!arguments.length) return light;
+        light = x;
+        margin = {top: 0, right: 0, bottom: 0, left: 0};
+        return profile;
+    };
 
     return profile;
 };

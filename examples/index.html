@@ -28,7 +28,7 @@
     var sel = d3.select('#chart'),
         sel2 = d3.select('#chart_light');
     var profile = d3.profile(),
-        profile2 = d3.profile();
+        profile2 = d3.profile().light(true);
     d3.select('body')
         .selectAll('button')
         .data(profiles)
