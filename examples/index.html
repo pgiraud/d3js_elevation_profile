@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        font: 10px sans-serif;
+    }
+    #chart {
+        width: 500px;
+        height: 200px;
+    }
+</style>
+<body>
+<div id="chart"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="../src/profile.js"></script>
+<script>
+    var profiles = Array.apply(null, Array(4)).map(function (_, i) {return i;});
+
+    var sel = d3.select('#chart');
+    d3.select('body')
+        .selectAll('button')
+        .data(profiles)
+        .enter()
+        .append('button')
+        .text(function(d) {return d;})
+        .on('click', function(d) {
+            d3.json('profile_' + d + '.json', function(data) {
+                sel.datum(data).call(d3.profile());
+            });
+        });
+</script>
