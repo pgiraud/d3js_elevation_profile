@@ -61,6 +61,16 @@ d3.profile = function() {
             g.select(".y.axis")
                 .transition()
                 .call(yAxis);
+
+            container.insert('g', ":first-child")
+                .attr('class', 'grid-y')
+                .attr('stroke-dasharray', '5,5');
+
+            g.select(".grid-y")
+                .call(yAxis
+                    .tickSize(-width, 0, 0)
+                    .tickFormat('')
+                );
         });
     }
 
