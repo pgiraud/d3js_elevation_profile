@@ -27,10 +27,6 @@ d3.profile = function() {
                 .scale(y)
                 .orient("left");
 
-            if (light) {
-                xAxis.ticks(0);
-                yAxis.ticks(0);
-            }
 
             var area = d3.svg.area()
                 .x(function(d) { return x(d.dist); })
@@ -70,20 +66,47 @@ d3.profile = function() {
                 .datum(d)
                 .attr("d", area);
 
-            container.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")");
+            if (!light) {
+                container.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")");
 
-            g.select(".x.axis")
-                .transition()
-                .call(xAxis);
+                var units = "m";
+                if (xDomain[1] > 2000) {
+                    units = "km";
+                    xAxis.tickFormat(function(d) {
+                        return d / 1000;
+                    });
+                }
 
-            container.append("g")
-                .attr("class", "y axis");
+                g.select(".x.axis")
+                    .transition()
+                    .call(xAxis);
 
-            g.select(".y.axis")
-                .transition()
-                .call(yAxis);
+                container.append("text")
+                    .attr("class", "x label")
+                    .attr("text-anchor", "end")
+                    .attr("x", width - 4)
+                    .attr("y", height - 4);
+
+                g.select(".x.label")
+                    .text("distance (" + units + ")");
+
+                container.append("g")
+                    .attr("class", "y axis");
+
+                g.select(".y.axis")
+                    .transition()
+                    .call(yAxis);
+
+                container.append("text")
+                    .attr("class", "y label")
+                    .attr("text-anchor", "end")
+                    .attr("y", 6)
+                    .attr("dy", ".75em")
+                    .attr("transform", "rotate(-90)")
+                    .text("elevation (m)");
+            }
 
             container.insert('g', ":first-child")
                 .attr('class', 'grid-y')
