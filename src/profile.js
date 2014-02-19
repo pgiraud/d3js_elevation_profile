@@ -64,6 +64,7 @@ d3.profile = function() {
 
             g.select(".area")
                 .datum(d)
+                .transition()
                 .attr("d", area);
 
             if (!light) {
@@ -113,6 +114,7 @@ d3.profile = function() {
                 .attr('stroke-dasharray', '5,5');
 
             g.select(".grid-y")
+                .transition()
                 .call(yAxis
                     .tickSize(-width, 0, 0)
                     .tickFormat('')
