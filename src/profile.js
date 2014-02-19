@@ -45,8 +45,23 @@ d3.profile = function() {
               .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            x.domain(d3.extent(d, function(d) { return d.dist; }));
-            y.domain([0, d3.max(d, function(d) { return d.alts.DTM25; })]);
+            var xDomain = d3.extent(d, function(d) { return d.dist; });
+            x.domain(xDomain);
+
+            var yDomain = [d3.min(d, function(d) { return d.alts.DTM25; }),
+                           d3.max(d, function(d) { return d.alts.DTM25; })];
+
+            // set the ratio according to the horizontal distance
+            var ratioXY = 0.2;
+            if (xDomain[1] < 1000) {
+                ratioXY = 0.05;
+            } else if (xDomain[1] < 30000) {
+                ratioXY = 0.1;
+            }
+            var mean = (yDomain[1] - yDomain[0])  / 2 + yDomain[0];
+            var xResolution = (xDomain[1] - xDomain[0]) / width;
+            y.domain([mean - (xResolution * ratioXY) * height / 2,
+                      mean + (xResolution * ratioXY) * height / 2]);
 
             container.append("path")
                 .attr("class", "area");
