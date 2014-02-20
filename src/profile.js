@@ -1,20 +1,14 @@
 d3.profile = function() {
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 50};
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+        light = false,
+        bisectDistance = d3.bisector(function(d) { return d.dist; }).left,
+        units,
+        xFactor,
+        callback = function() {};
 
-    // if true, no axis labels are displayed
-    var light = false;
-
-    var bisectDistance = d3.bisector(function(d) { return d.dist; }).left;
-
-    var units,
-        xFactor;
-
-    var callback = function() {};
-
-    function profile(g) {
-        g.each(function(d, i) {
-            var g = d3.select(this);
+    function profile(selection) {
+        selection.each(function(data) {
 
             var width = this.getBoundingClientRect().width -
                 margin.right - margin.left;
@@ -40,19 +34,69 @@ d3.profile = function() {
                 .y0(height)
                 .y1(function(d) { return y(d.alts.DTM25); });
 
-            var container = g.selectAll("svg")
-                .data([0]).enter()
-              .append('svg')
+            // Select the svg element, if it exists.
+            var svg = d3.select(this).selectAll("svg").data([data]);
+
+            // Otherwise, create the skeletal chart.
+            var gEnter = svg.enter().append("svg").append("g");
+            gEnter.append("path").attr("class", "area");
+
+            gEnter.insert('g', ":first-child")
+                .attr('class', 'grid-y')
+                .attr('stroke-dasharray', '5,5');
+
+            if (!light) {
+                gEnter.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")");
+
+                gEnter.append("text")
+                    .attr("class", "x label")
+                    .attr("text-anchor", "end")
+                    .attr("x", width - 4)
+                    .attr("y", height - 4);
+
+                gEnter.append("g")
+                    .attr("class", "y axis");
+
+                gEnter.append("text")
+                    .attr("class", "y label")
+                    .attr("text-anchor", "end")
+                    .attr("y", 6)
+                    .attr("dy", ".75em")
+                    .attr("transform", "rotate(-90)")
+                    .text("elevation (m)");
+
+                var yHover = gEnter.append('g').attr('class', 'y grid-hover');
+                yHover.append("svg:line").attr('stroke-dasharray', '5,5');
+                yHover.append("text");
+
+                var xHover = gEnter.append('g').attr('class', 'x grid-hover');
+                xHover.append("svg:line").attr('stroke-dasharray', '5,5');
+                xHover.append("text");
+
+                gEnter.append("rect")
+                    .attr("class", "overlay")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style("fill", "none")
+                    .style("pointer-events", "all");
+            }
+
+            // Update the outer dimensions.
+            svg
                 .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-              .append("g")
+                .attr("height", height + margin.top + margin.bottom);
+
+            // Update the inner dimensions.
+            var g = svg.select("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            var xDomain = d3.extent(d, function(d) { return d.dist; });
+            var xDomain = d3.extent(data, function(d) { return d.dist; });
             x.domain(xDomain);
 
-            var yDomain = [d3.min(d, function(d) { return d.alts.DTM25; }),
-                           d3.max(d, function(d) { return d.alts.DTM25; })];
+            var yDomain = [d3.min(data, function(d) { return d.alts.DTM25; }),
+                           d3.max(data, function(d) { return d.alts.DTM25; })];
 
             // set the ratio according to the horizontal distance
             var ratioXY = 0.2;
@@ -66,11 +110,9 @@ d3.profile = function() {
             y.domain([mean - (xResolution * ratioXY) * height / 2,
                       mean + (xResolution * ratioXY) * height / 2]);
 
-            container.append("path")
-                .attr("class", "area");
 
+            // Update the area path.
             g.select(".area")
-                .datum(d)
                 .transition()
                 .attr("d", area);
 
@@ -82,46 +124,23 @@ d3.profile = function() {
                 units = ' m';
             }
             if (!light) {
-                container.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")");
 
-                    xAxis.tickFormat(function(d) {
-                        return d / xFactor;
-                    });
+                xAxis.tickFormat(function(d) {
+                    return d / xFactor;
+                });
 
                 g.select(".x.axis")
                     .transition()
                     .call(xAxis);
 
-                container.append("text")
-                    .attr("class", "x label")
-                    .attr("text-anchor", "end")
-                    .attr("x", width - 4)
-                    .attr("y", height - 4);
 
                 g.select(".x.label")
                     .text("distance (" + units + ")");
 
-                container.append("g")
-                    .attr("class", "y axis");
-
                 g.select(".y.axis")
                     .transition()
                     .call(yAxis);
-
-                container.append("text")
-                    .attr("class", "y label")
-                    .attr("text-anchor", "end")
-                    .attr("y", 6)
-                    .attr("dy", ".75em")
-                    .attr("transform", "rotate(-90)")
-                    .text("elevation (m)");
             }
-
-            container.insert('g', ":first-child")
-                .attr('class', 'grid-y')
-                .attr('stroke-dasharray', '5,5');
 
             g.select(".grid-y")
                 .transition()
@@ -136,24 +155,10 @@ d3.profile = function() {
                 .style('shape-rendering', 'crispEdges');
 
             if (!light) {
-                var yHover = container.append('g').attr('class', 'y grid-hover');
-                yHover.append("svg:line").attr('stroke-dasharray', '5,5');
-                yHover.append("text");
-
-                var xHover = container.append('g').attr('class', 'x grid-hover');
-                xHover.append("svg:line").attr('stroke-dasharray', '5,5');
-                xHover.append("text");
 
                 g.selectAll('.grid-hover line')
                     .style('stroke', '#222')
                     .style('opacity', 0.8);
-
-                container.append("rect")
-                    .attr("class", "overlay")
-                    .attr("width", width)
-                    .attr("height", height)
-                    .style("fill", "none")
-                    .style("pointer-events", "all");
 
                 g.select(".overlay")
                     .on("mouseout", mouseout)
@@ -163,8 +168,8 @@ d3.profile = function() {
             function mousemove() {
                 var mouseX = d3.mouse(this)[0],
                     x0 = x.invert(mouseX),
-                    i = bisectDistance(d, x0, 1),
-                    point = d[i];
+                    i = bisectDistance(data, x0, 1),
+                    point = data[i];
 
                 g.select(".x.grid-hover")
                     .style('display', 'inline')
