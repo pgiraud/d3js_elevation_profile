@@ -38,9 +38,13 @@
 <script>
     var profiles = [0, 1, 2, 3, 4, 5, 6];
 
+    var callback = function() {
+      console.log(arguments);
+    };
+
     var sel = d3.select('#chart'),
         sel2 = d3.select('#chart_light');
-    var profile = d3.profile(),
+    var profile = d3.profile().callback(callback),
         profile2 = d3.profile().light(true);
     d3.select('body')
         .selectAll('button')
@@ -54,4 +58,5 @@
                 sel2.datum(data).call(profile2);
             });
         });
+
 </script>

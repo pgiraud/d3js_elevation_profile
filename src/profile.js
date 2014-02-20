@@ -10,6 +10,8 @@ d3.profile = function() {
     var units,
         xFactor;
 
+    var callback = function() {};
+
     function profile(g) {
         g.each(function(d, i) {
             var g = d3.select(this);
@@ -193,6 +195,7 @@ d3.profile = function() {
                     .text(Math.round(point.alts.DTM25) + ' m')
                     .attr("transform", "translate(" + (x(x0) + 10) + "," +
                            (y(point.alts.DTM25) - 10) + ")");
+                callback.call(null, point.easting, point.northing);
             }
 
             function mouseout() {
@@ -209,6 +212,12 @@ d3.profile = function() {
         if (!arguments.length) return light;
         light = x;
         margin = {top: 0, right: 0, bottom: 0, left: 0};
+        return profile;
+    };
+
+    profile.callback = function(cb) {
+        if (!arguments.length) return callback;
+        callback = cb;
         return profile;
     };
 
