@@ -5,7 +5,9 @@ d3.profile = function() {
         bisectDistance = d3.bisector(function(d) { return d.dist; }).left,
         units,
         xFactor,
-        callback = function() {};
+        callback = function() {},
+        FILL_COLOR = '#BDBDBD',
+        STROKE_COLOR = '#F00';
 
     function profile(selection) {
         selection.each(function(data) {
@@ -33,13 +35,20 @@ d3.profile = function() {
                 .x(function(d) { return x(d.dist); })
                 .y0(height)
                 .y1(function(d) { return y(d.alts.DTM25); });
+            var line = d3.svg.line()
+                .x(function(d) { return x(d.dist); })
+                .y(function(d) { return y(d.alts.DTM25); });
 
             // Select the svg element, if it exists.
             var svg = d3.select(this).selectAll("svg").data([data]);
 
             // Otherwise, create the skeletal chart.
             var gEnter = svg.enter().append("svg").append("g");
-            gEnter.append("path").attr("class", "area");
+            gEnter.append("path").attr("class", "area")
+                .style('fill', FILL_COLOR);
+            gEnter.append("path").attr("class", "line")
+                .style('stroke', STROKE_COLOR)
+                .style('fill', 'none');
 
             gEnter.insert('g', ":first-child")
                 .attr('class', 'grid-y')
@@ -74,6 +83,13 @@ d3.profile = function() {
                 var xHover = gEnter.append('g').attr('class', 'x grid-hover');
                 xHover.append("svg:line").attr('stroke-dasharray', '5,5');
                 xHover.append("text");
+
+                var fHover = gEnter.append('circle')
+                    .attr('class', 'focus grid-hover')
+                    .attr('r', 4.5)
+                    .style('display', 'none')
+                    .style('stroke', STROKE_COLOR)
+                    .style('fill', 'none');
 
                 gEnter.append("rect")
                     .attr("class", "overlay")
@@ -115,6 +131,9 @@ d3.profile = function() {
             g.select(".area")
                 .transition()
                 .attr("d", area);
+            g.select(".line")
+                .transition()
+                .attr("d", line);
 
             if (xDomain[1] > 2000) {
                 xFactor = 1000;
@@ -187,6 +206,11 @@ d3.profile = function() {
                     .attr("x2", width)
                     .attr("y2", y(point.alts.DTM25));
 
+                g.select(".focus.grid-hover")
+                    .style('display', null)
+                    .attr('transform', 'translate(' + mouseX + ' ' +
+                      y(point.alts.DTM25) + ')');
+
                 var max = xDomain[1];
 
                 var res = xResolution.toPrecision(1);
@@ -204,10 +228,7 @@ d3.profile = function() {
             }
 
             function mouseout() {
-                g.select(".x.grid-hover")
-                    .style('display', 'none');
-
-                g.select(".y.grid-hover")
+                g.selectAll(".grid-hover")
                     .style('display', 'none');
             }
         });
