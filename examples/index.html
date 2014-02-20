@@ -31,10 +31,14 @@
     }
 </style>
 <body>
+<div id="profiles">Choose a profile:<br/></div>
 <div id="chart"></div>
+<button id="export">Export as SVG</button>
 <div id="chart_light"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="../src/profile.js"></script>
+<script src="http://eligrey.com/demos/FileSaver.js/Blob.js"></script>
+<script src="http://eligrey.com/demos/FileSaver.js/FileSaver.js"></script>
 <script>
     var profiles = [0, 1, 2, 3, 4, 5, 6];
 
@@ -46,11 +50,12 @@
         sel2 = d3.select('#chart_light');
     var profile = d3.profile().callback(callback),
         profile2 = d3.profile().light(true);
-    d3.select('body')
+    d3.select('#profiles')
         .selectAll('button')
         .data(profiles)
         .enter()
         .append('button')
+        .attr('class', 'profile')
         .text(function(d) {return d;})
         .on('click', function(d) {
             d3.json('profile_' + d + '.json', function(data) {
@@ -58,5 +63,10 @@
                 sel2.datum(data).call(profile2);
             });
         });
+    d3.selectAll('button.profile')[0][0].click();
 
+    d3.select('#export').on('click', function() {
+        var blob = new Blob([profile.asText()], {type: "image/svg+xml"});
+        saveAs(blob, "myProfile.svg");
+    });
 </script>

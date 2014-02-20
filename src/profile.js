@@ -226,5 +226,12 @@ d3.profile = function() {
         return profile;
     };
 
+    profile.asText = function() {
+        return  d3.select("svg")
+            .attr("version", 1.1)
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .node().parentNode.innerHTML;
+    }
+
     return profile;
 };
