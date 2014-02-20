@@ -5,6 +5,11 @@ d3.profile = function() {
     // if true, no axis labels are displayed
     var light = false;
 
+    var bisectDistance = d3.bisector(function(d) { return d.dist; }).left;
+
+    var units,
+        xFactor;
+
     function profile(g) {
         g.each(function(d, i) {
             var g = d3.select(this);
@@ -67,18 +72,21 @@ d3.profile = function() {
                 .transition()
                 .attr("d", area);
 
+            if (xDomain[1] > 2000) {
+                xFactor = 1000;
+                units = " km";
+            } else {
+                xFactor = 1;
+                units = ' m';
+            }
             if (!light) {
                 container.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height + ")");
 
-                var units = "m";
-                if (xDomain[1] > 2000) {
-                    units = "km";
                     xAxis.tickFormat(function(d) {
-                        return d / 1000;
+                        return d / xFactor;
                     });
-                }
 
                 g.select(".x.axis")
                     .transition()
@@ -124,6 +132,76 @@ d3.profile = function() {
                 .style('fill', 'none')
                 .style('stroke', '#000')
                 .style('shape-rendering', 'crispEdges');
+
+            if (!light) {
+                var yHover = container.append('g').attr('class', 'y grid-hover');
+                yHover.append("svg:line").attr('stroke-dasharray', '5,5');
+                yHover.append("text");
+
+                var xHover = container.append('g').attr('class', 'x grid-hover');
+                xHover.append("svg:line").attr('stroke-dasharray', '5,5');
+                xHover.append("text");
+
+                g.selectAll('.grid-hover line')
+                    .style('stroke', '#222')
+                    .style('opacity', 0.8);
+
+                container.append("rect")
+                    .attr("class", "overlay")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style("fill", "none")
+                    .style("pointer-events", "all");
+
+                g.select(".overlay")
+                    .on("mouseout", mouseout)
+                    .on("mousemove", mousemove);
+            }
+
+            function mousemove() {
+                var mouseX = d3.mouse(this)[0],
+                    x0 = x.invert(mouseX),
+                    i = bisectDistance(d, x0, 1),
+                    point = d[i];
+
+                g.select(".x.grid-hover")
+                    .style('display', 'inline')
+                    .select("line")
+                    .attr("x1", mouseX)
+                    .attr("y1", height)
+                    .attr("x2", mouseX)
+                    .attr("y2", y(point.alts.DTM25));
+
+                g.select(".y.grid-hover")
+                    .style('display', 'inline')
+                    .select("line")
+                    .attr("x1", x(0))
+                    .attr("y1", y(point.alts.DTM25))
+                    .attr("x2", width)
+                    .attr("y2", y(point.alts.DTM25));
+
+                var max = xDomain[1];
+
+                var res = xResolution.toPrecision(1);
+                var dist = Math.round(x0 / res) * res / xFactor;
+                g.select(".x.grid-hover text")
+                    .text(parseFloat(dist.toPrecision(3)) + units)
+                    .attr("transform", "translate(" + (x(x0) + 10) + "," +
+                           (height - 10) + ")");
+
+                g.select(".y.grid-hover text")
+                    .text(Math.round(point.alts.DTM25) + ' m')
+                    .attr("transform", "translate(" + (x(x0) + 10) + "," +
+                           (y(point.alts.DTM25) - 10) + ")");
+            }
+
+            function mouseout() {
+                g.select(".x.grid-hover")
+                    .style('display', 'none');
+
+                g.select(".y.grid-hover")
+                    .style('display', 'none');
+            }
         });
     }
 
