@@ -119,6 +119,11 @@ d3.profile = function() {
                     .tickSize(-width, 0, 0)
                     .tickFormat('')
                 );
+
+            g.selectAll('.axis').selectAll('path, line')
+                .style('fill', 'none')
+                .style('stroke', '#000')
+                .style('shape-rendering', 'crispEdges');
         });
     }
 
