@@ -19,6 +19,7 @@
 <button id="export">Export as SVG</button>
 <div id="chart_light"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="../src/profile.js"></script>
 <script src="http://eligrey.com/demos/FileSaver.js/Blob.js"></script>
 <script src="http://eligrey.com/demos/FileSaver.js/FileSaver.js"></script>
@@ -41,10 +42,21 @@
         .attr('class', 'profile')
         .text(function(d) {return d;})
         .on('click', function(d) {
-            d3.json('profile_' + d + '.json', function(data) {
-                sel.datum(data).call(profile);
-                sel2.datum(data).call(profile2);
-            });
+            queue()
+                .defer(d3.json, 'profile_' + d + '.json')
+                .defer(d3.json, 'profile_' + d + '_pois.json')
+                .await(function(error, track, pois) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    var data = {
+                        track: track,
+                        pois: pois
+                    };
+                    sel.datum(data).call(profile);
+                    sel2.datum(data).call(profile2);
+                });
         });
     d3.selectAll('button.profile')[0][3].click();
 

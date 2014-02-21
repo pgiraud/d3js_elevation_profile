@@ -1,0 +1,34 @@
+{
+  "type": "FeatureCollection",
+  "features": [{
+    "geometry": {
+      "type": "Point",
+      "coordinates": [720238.090024, 165945.603969]
+    },
+    "type": "Feature",
+    "properties": {
+      "distance": 43630,
+      "track": 1564183,
+      "photo": null,
+      "sort": 2,
+      "description": "",
+      "title": "red"
+    },
+    "id": 103834
+  }, {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [720238.090024, 165945.603969]
+    },
+    "type": "Feature",
+    "properties": {
+      "distance": 5200,
+      "track": 1564183,
+      "photo": null,
+      "sort": 2,
+      "description": "",
+      "title": "blue"
+    },
+    "id": 108349
+  }]
+}
