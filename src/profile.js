@@ -132,6 +132,10 @@ d3.profile = function() {
             y.domain([mean - (xResolution * ratioXY) * height / 2,
                       mean + (xResolution * ratioXY) * height / 2]);
 
+            // Avoid negative values for y-axis
+            if (y.domain()[0] < 0)  {
+                y.domain([0, - y.domain()[0] + y.domain()[1]]);
+            }
 
             // Update the area path.
             g.select(".area")
