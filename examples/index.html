@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-    body {
-        font: 10px sans-serif;
-    }
     #chart {
         width: 500px;
         height: 200px;
@@ -12,19 +9,8 @@
         width: 200px;
         height: 150px;
     }
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-    .grid-y .tick line {
-        stroke: grey;
-        opacity: 0.7;
-    }
-    .label {
-        fill: grey;
-        shape-rendering: crispEdges;
+    #profiles {
+      margin: 2em;
     }
 </style>
 <body>
@@ -60,7 +46,7 @@
                 sel2.datum(data).call(profile2);
             });
         });
-    d3.selectAll('button.profile')[0][0].click();
+    d3.selectAll('button.profile')[0][3].click();
 
     d3.select('#export').on('click', function() {
         var blob = new Blob([profile.asText()], {type: "image/svg+xml"});

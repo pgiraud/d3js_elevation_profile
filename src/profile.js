@@ -44,6 +44,7 @@ d3.profile = function() {
 
             // Otherwise, create the skeletal chart.
             var gEnter = svg.enter().append("svg").append("g");
+            gEnter.style('font', '11px Arial');
             gEnter.append("path").attr("class", "area")
                 .style('fill', FILL_COLOR);
             gEnter.append("path").attr("class", "line")
@@ -154,7 +155,9 @@ d3.profile = function() {
 
 
                 g.select(".x.label")
-                    .text("distance (" + units + ")");
+                    .text("distance (" + units + ")")
+                    .style('fill', 'grey')
+                    .style('shape-rendering', 'crispEdges');
 
                 g.select(".y.axis")
                     .transition()
@@ -166,7 +169,10 @@ d3.profile = function() {
                 .call(yAxis
                     .tickSize(-width, 0, 0)
                     .tickFormat('')
-                );
+                )
+                .selectAll('.tick line')
+                    .style('stroke', 'grey')
+                    .style('opacity', 0.7);
 
             g.selectAll('.axis').selectAll('path, line')
                 .style('fill', 'none')
