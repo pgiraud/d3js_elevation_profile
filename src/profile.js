@@ -12,6 +12,9 @@ d3.profile = function() {
     function profile(selection) {
         selection.each(function(data) {
 
+            var track = data.track,
+                pois = data.pois.features;
+
             var width = this.getBoundingClientRect().width -
                 margin.right - margin.left;
             var x = d3.scale.linear()
@@ -40,7 +43,7 @@ d3.profile = function() {
                 .y(function(d) { return y(d.alts.DTM25); });
 
             // Select the svg element, if it exists.
-            var svg = d3.select(this).selectAll("svg").data([data]);
+            var svg = d3.select(this).selectAll("svg").data([track]);
 
             // Otherwise, create the skeletal chart.
             var gEnter = svg.enter().append("svg").append("g");
@@ -77,6 +80,8 @@ d3.profile = function() {
                     .attr("transform", "rotate(-90)")
                     .text("elevation (m)");
 
+                gEnter.append('g').attr("class", "pois");
+
                 var yHover = gEnter.append('g').attr('class', 'y grid-hover');
                 yHover.append("svg:line").attr('stroke-dasharray', '5,5');
                 yHover.append("text");
@@ -109,11 +114,11 @@ d3.profile = function() {
             var g = svg.select("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            var xDomain = d3.extent(data, function(d) { return d.dist; });
+            var xDomain = d3.extent(track, function(d) { return d.dist; });
             x.domain(xDomain);
 
-            var yDomain = [d3.min(data, function(d) { return d.alts.DTM25; }),
-                           d3.max(data, function(d) { return d.alts.DTM25; })];
+            var yDomain = [d3.min(track, function(d) { return d.alts.DTM25; }),
+                           d3.max(track, function(d) { return d.alts.DTM25; })];
 
             // set the ratio according to the horizontal distance
             var ratioXY = 0.2;
@@ -153,7 +158,6 @@ d3.profile = function() {
                     .transition()
                     .call(xAxis);
 
-
                 g.select(".x.label")
                     .text("distance (" + units + ")")
                     .style('fill', 'grey')
@@ -162,6 +166,62 @@ d3.profile = function() {
                 g.select(".y.axis")
                     .transition()
                     .call(yAxis);
+
+
+                var ps = g.select('.pois');
+
+                // remove any previously existing pois
+                // Note: not using exit() here cause poi id may already exist
+                ps.selectAll(".poi").remove();
+                var p = ps.selectAll(".poi")
+                    .data(pois, function(d) {
+                        var distance = d.properties.distance,
+                            i = bisectDistance(track, distance, 1),
+                            point = track[i];
+                        if (point) {
+                            d.distance = distance;
+                            d.alt = point.alts.DTM25;
+                        }
+                        return d.id;
+                    });
+
+                poiEnter = p.enter()
+                    .append("g")
+                    .attr("class", "poi");
+
+                ps.selectAll(".poi")
+                    .style("opacity", 0)
+                    .transition()
+                    .duration(1000)
+                    .delay(100)
+                    .style("opacity", 1);
+
+                poiEnter
+                    .append("text")
+                    .attr("x", 9)
+                    .attr("dy", ".35em")
+                    .attr("transform", function(d) {
+                        return ["translate(", x(d.distance), ",",
+                                (y(d.alt) - 20), "), rotate(-60)"].join("");
+                    })
+                    .text(function(d) { return d.properties.title; });
+
+                poiEnter.append("line")
+                     .style("stroke", "grey")
+                     .attr("x1", function(d) { return x(d.distance);})
+                     .attr("y1", function(d) { return y(y.domain()[0]);})
+                     .attr("x2", function(d) { return x(d.distance);})
+                     .attr("y2", function(d) { return y(d.alt);});
+
+                poiEnter.append("line")
+                     .style("stroke", "#000")
+                     .attr("x1", function(d) { return x(d.distance);})
+                     .attr("y1", function(d) { return y(d.alt);})
+                     .attr("x2", function(d) { return x(d.distance);})
+                     .attr("y2", function(d) { return y(d.alt) - 20;});
+
+                poiEnter.selectAll('line')
+                     .style("shape-rendering", "crispEdges");
             }
 
             g.select(".grid-y")
@@ -193,8 +253,8 @@ d3.profile = function() {
             function mousemove() {
                 var mouseX = d3.mouse(this)[0],
                     x0 = x.invert(mouseX),
-                    i = bisectDistance(data, x0, 1),
-                    point = data[i];
+                    i = bisectDistance(track, x0, 1),
+                    point = track[i];
 
                 g.select(".x.grid-hover")
                     .style('display', 'inline')
