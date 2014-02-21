@@ -121,10 +121,10 @@ d3.profile = function() {
                            d3.max(track, function(d) { return d.alts.DTM25; })];
 
             // set the ratio according to the horizontal distance
-            var ratioXY = 0.2;
-            if (xDomain[1] < 1000) {
-                ratioXY = 0.05;
-            } else if (xDomain[1] < 30000) {
+            var ratioXY = 0.05;
+            if (xDomain[1] < 10000) {
+                ratioXY = 0.2;
+            } else if (xDomain[1] < 100000) {
                 ratioXY = 0.1;
             }
             var mean = (yDomain[1] - yDomain[0])  / 2 + yDomain[0];
