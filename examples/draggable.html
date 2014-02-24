@@ -15,7 +15,7 @@
 
   </style>
 <!-- <button id="export">Export as SVG</button> -->
-<script src="d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://eligrey.com/demos/FileSaver.js/Blob.js"></script>
 <script src="http://eligrey.com/demos/FileSaver.js/FileSaver.js"></script>
 <script>
@@ -147,12 +147,11 @@ chart.margin_right = function(m) {
 <script>
   var random = d3.random.irwinHall(10);
   var points = d3.range(0, 928, 8).map(function(e) {
-    return [e, (e / 1000.0) * 30 + 100 * random()];
+    return [e, (e / 1000.0) * 30 + 10 * random()];
   }),
   setup = d3.range(0, 3).map(function() {
     var chart = toomanydata()
     .clip('url(#clipper)');
-
     return { 'points' : points, 'chart' : chart };
   }),
   max = d3.max(points, function(d) { return d[0]; });
