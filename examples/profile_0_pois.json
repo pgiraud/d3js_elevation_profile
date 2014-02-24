@@ -7,12 +7,42 @@
     }, 
     "type": "Feature", 
     "properties": {
-      "distance": 3630,
+      "distance": 11100,
       "track": 1564183, 
       "photo": null, 
       "sort": 2, 
       "description": "", 
-      "title": "mittag"
+      "title": "Churwalden"
+    }, 
+    "id": 383
+  }, {
+    "geometry": {
+      "type": "Point", 
+      "coordinates": [720238.090024, 165945.603969]
+    }, 
+    "type": "Feature", 
+    "properties": {
+      "distance": 4400,
+      "track": 1564183, 
+      "photo": null, 
+      "sort": 2, 
+      "description": "", 
+      "title": "Pix Scalottas"
+    }, 
+    "id": 3834
+  }, {
+    "geometry": {
+      "type": "Point", 
+      "coordinates": [720238.090024, 165945.603969]
+    }, 
+    "type": "Feature", 
+    "properties": {
+      "distance": 23800,
+      "track": 1564183, 
+      "photo": null, 
+      "sort": 2, 
+      "description": "", 
+      "title": "Igl Lai Heidsee"
     }, 
     "id": 38349
   }]

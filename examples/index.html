@@ -2,8 +2,8 @@
 <meta charset="utf-8">
 <style>
     #chart {
-        width: 500px;
-        height: 200px;
+        width: 400px;
+        height: 300px;
     }
     #chart_light {
         width: 200px;
@@ -24,7 +24,7 @@
 <script src="http://eligrey.com/demos/FileSaver.js/Blob.js"></script>
 <script src="http://eligrey.com/demos/FileSaver.js/FileSaver.js"></script>
 <script>
-    var profiles = [0, 1, 2, 3, 4, 5, 6];
+    var profiles = ["ML_etappe_612", "creux_du_van", "bl_waldenburg-langenbruck", "enneda-augsten-schwanden", "gemmipass", "pragelpass-weg", "salhoehe-staffelegg", "vl_1_02_oberwald-brig", "wl_806_01"];
 
     var callback = function() {
       console.log(arguments);
@@ -40,11 +40,11 @@
         .enter()
         .append('button')
         .attr('class', 'profile')
-        .text(function(d) {return d;})
-        .on('click', function(d) {
+        .text(function(d, i) {return d;})
+        .on('click', function(d, i) {
             queue()
-                .defer(d3.json, 'profile_' + d + '.json')
-                .defer(d3.json, 'profile_' + d + '_pois.json')
+                .defer(d3.json, 'profile_' + i + '.json')
+                .defer(d3.json, 'profile_' + i + '_pois.json')
                 .await(function(error, track, pois) {
                     if (error) {
                         console.log(error);

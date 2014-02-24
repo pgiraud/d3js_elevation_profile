@@ -7,12 +7,12 @@
     },
     "type": "Feature",
     "properties": {
-      "distance": 43630,
+      "distance": 10,
       "track": 1564183,
       "photo": null,
       "sort": 2,
       "description": "",
-      "title": "red"
+      "title": "Oberdorf BL"
     },
     "id": 103834
   }, {
@@ -22,12 +22,27 @@
     },
     "type": "Feature",
     "properties": {
-      "distance": 5200,
+      "distance": 4984,
       "track": 1564183,
       "photo": null,
       "sort": 2,
       "description": "",
-      "title": "blue"
+      "title": "Belchen"
+    },
+    "id": 13834
+  }, {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [720238.090024, 165945.603969]
+    },
+    "type": "Feature",
+    "properties": {
+      "distance": 9142,
+      "track": 1564183,
+      "photo": null,
+      "sort": 2,
+      "description": "",
+      "title": "Langenbruck"
     },
     "id": 108349
   }]
