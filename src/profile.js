@@ -14,7 +14,7 @@ d3.locale.fr_FR = d3.locale({
 });
 d3.profile = function() {
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    var margin = {top: 20, right: 50, bottom: 30, left: 50},
         light = false,
         bisectDistance = d3.bisector(function(d) { return d.dist; }).left,
         units,
@@ -141,6 +141,7 @@ d3.profile = function() {
             } else if (xDomain[1] < 100000) {
                 ratioXY = 0.1;
             }
+            console.log(ratioXY);
             var mean = (yDomain[1] - yDomain[0])  / 2 + yDomain[0];
             var xResolution = (xDomain[1] - xDomain[0]) / width;
             y.domain([mean - (xResolution * ratioXY) * height / 2,

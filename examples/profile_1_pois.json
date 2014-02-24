@@ -7,7 +7,7 @@
     }, 
     "type": "Feature", 
     "properties": {
-      "distance": 5200,
+      "distance": 200,
       "track": 1564183, 
       "photo": null, 
       "sort": 2, 
@@ -15,5 +15,20 @@
       "title": "blue"
     }, 
     "id": 108349
+  },{
+    "geometry": {
+      "type": "Point", 
+      "coordinates": [720238.090024, 165945.603969]
+    }, 
+    "type": "Feature", 
+    "properties": {
+      "distance": 1800,
+      "track": 1564183, 
+      "photo": null, 
+      "sort": 2, 
+      "description": "", 
+      "title": "Hohtüri (Blûemlisalphütte), 2774m"
+    }, 
+    "id": 10834
   }]
 }
