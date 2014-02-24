@@ -70,8 +70,7 @@ d3.profile = function() {
                 .style('fill', 'none');
 
             gEnter.insert('g', ":first-child")
-                .attr('class', 'grid-y')
-                .attr('stroke-dasharray', '5,5');
+                .attr('class', 'grid-y');
 
             if (!light) {
                 gEnter.append("g")
@@ -250,7 +249,7 @@ d3.profile = function() {
                     .tickFormat('')
                 )
                 .selectAll('.tick line')
-                    .style('stroke', 'grey')
+                    .style('stroke', '#ccc')
                     .style('opacity', 0.7);
 
             g.selectAll('.axis').selectAll('path, line')
