@@ -6,7 +6,7 @@ d3.profile = function() {
         units,
         xFactor,
         callback = function() {},
-        FILL_COLOR = '#BDBDBD',
+        FILL_COLOR = '#DEDEDE',
         STROKE_COLOR = '#F00';
 
     function profile(selection) {
