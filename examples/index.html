@@ -41,7 +41,7 @@
         .enter()
         .append('button')
         .attr('class', 'profile')
-        .text(function(d, i) {return d;})
+        .text(function(d, i) {return i + " - " +  d;})
         .on('click', function(d, i) {
             queue()
                 .defer(d3.json, 'profile_' + i + '.json')
