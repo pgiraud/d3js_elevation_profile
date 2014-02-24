@@ -1,3 +1,17 @@
+d3.locale.fr_FR = d3.locale({
+    "decimal": ",",
+  "thousands": "'",
+  "grouping": [3],
+  "currency": ["$", ""],
+  "dateTime": "%a %b %e %X %Y",
+  "date": "%m/%d/%Y",
+  "time": "%H:%M:%S",
+  "periods": ["AM", "PM"],
+  "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  "shortDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  "shortMonths": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+});
 d3.profile = function() {
 
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
@@ -31,7 +45,8 @@ d3.profile = function() {
 
             var yAxis = d3.svg.axis()
                 .scale(y)
-                .orient("left");
+                .orient("left")
+                .tickFormat(d3.locale.fr_FR.numberFormat(",.2F"));
 
 
             var area = d3.svg.area()
@@ -155,7 +170,7 @@ d3.profile = function() {
             if (!light) {
 
                 xAxis.tickFormat(function(d) {
-                    return d / xFactor;
+                    return d3.locale.fr_FR.numberFormat(',.2F')(d / xFactor);
                 });
 
                 g.select(".x.axis")
@@ -286,12 +301,14 @@ d3.profile = function() {
                 var res = xResolution.toPrecision(1);
                 var dist = Math.round(x0 / res) * res / xFactor;
                 g.select(".x.grid-hover text")
-                    .text(parseFloat(dist.toPrecision(3)) + units)
+                    .text(d3.locale.fr_FR.numberFormat(",.2F")
+                        (parseFloat(dist.toPrecision(3))) + units)
                     .attr("transform", "translate(" + (x(x0) + 10) + "," +
                            (height - 10) + ")");
 
                 g.select(".y.grid-hover text")
-                    .text(Math.round(point.alts.DTM25) + ' m')
+                    .text(d3.locale.fr_FR.numberFormat(",.2F")
+                        (Math.round(point.alts.DTM25)) + ' m')
                     .attr("transform", "translate(" + (x(x0) + 10) + "," +
                            (y(point.alts.DTM25) - 10) + ")");
                 callback.call(null, point.easting, point.northing);
