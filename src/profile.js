@@ -162,10 +162,10 @@ d3.profile = function() {
 
             if (xDomain[1] > 2000) {
                 xFactor = 1000;
-                units = " km";
+                units = "km";
             } else {
                 xFactor = 1;
-                units = ' m';
+                units = "m";
             }
             if (!light) {
 
@@ -302,7 +302,7 @@ d3.profile = function() {
                 var dist = Math.round(x0 / res) * res / xFactor;
                 g.select(".x.grid-hover text")
                     .text(d3.locale.fr_FR.numberFormat(",.2F")
-                        (parseFloat(dist.toPrecision(3))) + units)
+                        (parseFloat(dist.toPrecision(3))) + " " + units)
                     .attr("transform", "translate(" + (x(x0) + 10) + "," +
                            (height - 10) + ")");
 
