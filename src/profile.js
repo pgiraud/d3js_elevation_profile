@@ -95,29 +95,29 @@ d3.profile = function() {
                     .text("elevation (m)");
 
                 gEnter.append('g').attr("class", "pois");
-
-                var yHover = gEnter.append('g').attr('class', 'y grid-hover');
-                yHover.append("svg:line").attr('stroke-dasharray', '5,5');
-                yHover.append("text");
-
-                var xHover = gEnter.append('g').attr('class', 'x grid-hover');
-                xHover.append("svg:line").attr('stroke-dasharray', '5,5');
-                xHover.append("text");
-
-                var fHover = gEnter.append('circle')
-                    .attr('class', 'focus grid-hover')
-                    .attr('r', 4.5)
-                    .style('display', 'none')
-                    .style('stroke', STROKE_COLOR)
-                    .style('fill', 'none');
-
-                gEnter.append("rect")
-                    .attr("class", "overlay")
-                    .attr("width", width)
-                    .attr("height", height)
-                    .style("fill", "none")
-                    .style("pointer-events", "all");
             }
+
+            var yHover = gEnter.append('g').attr('class', 'y grid-hover');
+            yHover.append("svg:line").attr('stroke-dasharray', '5,5');
+            yHover.append("text");
+
+            var xHover = gEnter.append('g').attr('class', 'x grid-hover');
+            xHover.append("svg:line").attr('stroke-dasharray', '5,5');
+            xHover.append("text");
+
+            var fHover = gEnter.append('circle')
+                .attr('class', 'focus grid-hover')
+                .attr('r', 4.5)
+                .style('display', 'none')
+                .style('stroke', STROKE_COLOR)
+                .style('fill', 'none');
+
+            gEnter.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .style("fill", "none")
+                .style("pointer-events", "all");
 
             // Update the outer dimensions.
             svg
@@ -251,16 +251,13 @@ d3.profile = function() {
                 .style('stroke', '#000')
                 .style('shape-rendering', 'crispEdges');
 
-            if (!light) {
+            g.selectAll('.grid-hover line')
+                .style('stroke', '#222')
+                .style('opacity', 0.8);
 
-                g.selectAll('.grid-hover line')
-                    .style('stroke', '#222')
-                    .style('opacity', 0.8);
-
-                g.select(".overlay")
-                    .on("mouseout", mouseout)
-                    .on("mousemove", mousemove);
-            }
+            g.select(".overlay")
+                .on("mouseout", mouseout)
+                .on("mousemove", mousemove);
 
             function mousemove() {
                 var mouseX = d3.mouse(this)[0],
