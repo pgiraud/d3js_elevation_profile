@@ -232,13 +232,6 @@ d3.profile = function() {
                      .attr("x2", function(d) { return x(d.distance);})
                      .attr("y2", function(d) { return y(d.alt);});
 
-                poiEnter.append("line")
-                     .style("stroke", "#000")
-                     .attr("x1", function(d) { return x(d.distance);})
-                     .attr("y1", function(d) { return y(d.alt);})
-                     .attr("x2", function(d) { return x(d.distance);})
-                     .attr("y2", function(d) { return y(d.alt) - 20;});
-
                 poiEnter.selectAll('line')
                      .style("shape-rendering", "crispEdges");
             }
