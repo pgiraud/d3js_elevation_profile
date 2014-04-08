@@ -14,7 +14,7 @@ d3.locale.fr_FR = d3.locale({
 });
 d3.profile = function() {
 
-    var margin = {top: 20, right: 50, bottom: 30, left: 50},
+    var margin = {top: 40, right: 50, bottom: 30, left: 50},
         light = false,
         bisectDistance = d3.bisector(function(d) { return d.dist; }).left,
         units,
