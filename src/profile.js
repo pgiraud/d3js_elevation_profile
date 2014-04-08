@@ -1,5 +1,5 @@
 d3.locale.fr_FR = d3.locale({
-    "decimal": ",",
+  "decimal": ".",
   "thousands": "'",
   "grouping": [3],
   "currency": ["$", ""],
