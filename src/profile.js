@@ -136,7 +136,11 @@ d3.profile = function() {
 
             // set the ratio according to the horizontal distance
             var ratioXY = 0.05;
-            if (xDomain[1] < 20000) {
+            if (xDomain[1] < 2000) {
+                ratioXY = 0.5;
+            } else if (xDomain[1] < 5000) {
+                ratioXY = 0.33;
+            } else if (xDomain[1] < 20000) {
                 ratioXY = 0.2;
             } else if (xDomain[1] < 100000) {
                 ratioXY = 0.1;
