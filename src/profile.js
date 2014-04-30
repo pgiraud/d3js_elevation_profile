@@ -275,37 +275,44 @@ d3.profile = function() {
                     .attr("x1", mouseX)
                     .attr("y1", height)
                     .attr("x2", mouseX)
-                    .attr("y2", y(point.alts.DTM25));
+                    .attr("y2", y(point[2]));
 
                 g.select(".y.grid-hover")
                     .style('display', 'inline')
                     .select("line")
                     .attr("x1", x(0))
-                    .attr("y1", y(point.alts.DTM25))
+                    .attr("y1", y(point[2]))
                     .attr("x2", width)
-                    .attr("y2", y(point.alts.DTM25));
+                    .attr("y2", y(point[2]));
 
                 g.select(".focus.grid-hover")
                     .style('display', null)
                     .attr('transform', 'translate(' + mouseX + ' ' +
-                      y(point.alts.DTM25) + ')');
+                      y(point[2]) + ')');
 
                 var max = xDomain[1];
 
                 var res = xResolution.toPrecision(1);
                 var dist = Math.round(x0 / res) * res / xFactor;
+
+                var right = x0 > xDomain[1] / 2;
+                var xtranslate = x(x0);
+                xtranslate += right ? -10 : 10;
+
                 g.select(".x.grid-hover text")
                     .text(d3.locale.fr_FR.numberFormat(",.2F")
                         (parseFloat(dist.toPrecision(3))) + " " + units)
-                    .attr("transform", "translate(" + (x(x0) + 10) + "," +
+                    .style('text-anchor', right ? 'end' : 'start')
+                    .attr("transform", "translate(" + xtranslate + "," +
                            (height - 10) + ")");
 
                 g.select(".y.grid-hover text")
                     .text(d3.locale.fr_FR.numberFormat(",.2F")
-                        (Math.round(point.alts.DTM25)) + ' m')
-                    .attr("transform", "translate(" + (x(x0) + 10) + "," +
-                           (y(point.alts.DTM25) - 10) + ")");
-                callback.call(null, point.easting, point.northing);
+                        (Math.round(point[2])) + ' m')
+                    .style('text-anchor', right ? 'end' : 'start')
+                    .attr("transform", "translate(" + xtranslate + "," +
+                           (y(point[2]) - 10) + ")");
+                callback.call(null, point[0], point[1]);
             }
 
             function mouseout() {
