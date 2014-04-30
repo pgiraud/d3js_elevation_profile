@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    #chart {
+        width: 500px;
+        height: 350px;
+        border: 1px solid grey;
+    }
+    #chart_light {
+        width: 200px;
+        height: 150px;
+    }
+    #profiles {
+      margin: 2em;
+    }
+</style>
+<body>
+<div id="profiles">Choose a profile:<br/></div>
+<div id="chart"></div>
+<button id="export">Export as SVG</button>
+<div id="chart_light"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="../src/profile.js"></script>
+<script src="http://eligrey.com/demos/FileSaver.js/Blob.js"></script>
+<script src="http://eligrey.com/demos/FileSaver.js/FileSaver.js"></script>
+<script>
+
+    var callback = function() {
+      console.log(arguments);
+    };
+
+    var sel = d3.select('#chart'),
+        sel2 = d3.select('#chart_light');
+    var profile = d3.profile().callback(callback),
+        profile2 = d3.profile().light(true);
+    d3.select('#profiles')
+        .selectAll('button')
+        .data([0])
+        .enter()
+        .append('button')
+        .attr('class', 'profile')
+        .text(function(d, i) {return i + " - " +  d;})
+        .on('click', function(d, i) {
+            queue()
+                .defer(d3.json, 'profile_osrm.json')
+                .await(function(error, track, pois) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    var data = {
+                        track: track,
+                        pois: {
+                            features: []
+                        }
+                    };
+                    sel.datum(data).call(profile);
+                    sel2.datum(data).call(profile2);
+                });
+        });
+    d3.selectAll('button.profile')[0][0].click();
+
+    d3.select('#export').on('click', function() {
+        var blob = new Blob([profile.asText()], {type: "image/svg+xml"});
+        saveAs(blob, "myProfile.svg");
+    });
+</script>

@@ -16,7 +16,7 @@ d3.profile = function() {
 
     var margin = {top: 40, right: 50, bottom: 30, left: 50},
         light = false,
-        bisectDistance = d3.bisector(function(d) { return d.dist; }).left,
+        bisectDistance = d3.bisector(function(d) { return d[3]; }).left,
         units,
         xFactor,
         callback = function() {},
@@ -50,12 +50,12 @@ d3.profile = function() {
 
 
             var area = d3.svg.area()
-                .x(function(d) { return x(d.dist); })
+                .x(function(d) { return x(d[3]); })
                 .y0(height)
-                .y1(function(d) { return y(d.alts.DTM25); });
+                .y1(function(d) { return y(d[2]); });
             var line = d3.svg.line()
-                .x(function(d) { return x(d.dist); })
-                .y(function(d) { return y(d.alts.DTM25); });
+                .x(function(d) { return x(d[3]); })
+                .y(function(d) { return y(d[2]); });
 
             // Select the svg element, if it exists.
             var svg = d3.select(this).selectAll("svg").data([track]);
@@ -128,11 +128,11 @@ d3.profile = function() {
             var g = svg.select("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            var xDomain = d3.extent(track, function(d) { return d.dist; });
+            var xDomain = d3.extent(track, function(d) { return d[3]; });
             x.domain(xDomain);
 
-            var yDomain = [d3.min(track, function(d) { return d.alts.DTM25; }),
-                           d3.max(track, function(d) { return d.alts.DTM25; })];
+            var yDomain = [d3.min(track, function(d) { return d[2]; }),
+                           d3.max(track, function(d) { return d[2]; })];
 
             // set the ratio according to the horizontal distance
             var ratioXY = 0.05;
@@ -203,7 +203,7 @@ d3.profile = function() {
                             point = track[i];
                         if (point) {
                             d.distance = distance;
-                            d.alt = point.alts.DTM25;
+                            d.alt = point[2];
                         }
                         return d.id;
                     });
