@@ -19,18 +19,18 @@ d3.profile = function() {
         bisectDistance = d3.bisector(function(d) { return d[3]; }).left,
         units,
         xFactor,
-        callback = function() {},
+        hoverCallback = function() {},
         FILL_COLOR = '#DEDEDE',
         STROKE_COLOR = '#F00',
         svg,
-        track,
+        profile,
         x,
         y;
 
     function profile(selection) {
         selection.each(function(data) {
 
-            track = data.track;
+            profile = data.profile;
 
             var width = this.getBoundingClientRect().width -
                 margin.right - margin.left;
@@ -61,7 +61,7 @@ d3.profile = function() {
                 .y(function(d) { return y(d[2]); });
 
             // Select the svg element, if it exists.
-            svg = d3.select(this).selectAll("svg").data([track]);
+            svg = d3.select(this).selectAll("svg").data([profile]);
 
             // Otherwise, create the skeletal chart.
             var gEnter = svg.enter().append("svg").append("g");
@@ -131,11 +131,11 @@ d3.profile = function() {
             var g = svg.select("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            var xDomain = d3.extent(track, function(d) { return d[3]; });
+            var xDomain = d3.extent(profile, function(d) { return d[3]; });
             x.domain(xDomain);
 
-            var yDomain = [d3.min(track, function(d) { return d[2]; }),
-                           d3.max(track, function(d) { return d[2]; })];
+            var yDomain = [d3.min(profile, function(d) { return d[2]; }),
+                           d3.max(profile, function(d) { return d[2]; })];
 
             // set the ratio according to the horizontal distance
             var ratioXY = 0.05;
@@ -220,8 +220,8 @@ d3.profile = function() {
             function mousemove() {
                 var mouseX = d3.mouse(this)[0],
                     x0 = x.invert(mouseX),
-                    i = bisectDistance(track, x0, 1),
-                    point = track[i];
+                    i = bisectDistance(profile, x0, 1),
+                    point = profile[i];
 
                 g.select(".x.grid-hover")
                     .style('display', 'inline')
@@ -266,7 +266,7 @@ d3.profile = function() {
                     .style('text-anchor', right ? 'end' : 'start')
                     .attr("transform", "translate(" + xtranslate + "," +
                            (y(point[2]) - 10) + ")");
-                callback.call(null, point[0], point[1]);
+                hoverCallback.call(null, point[0], point[1]);
             }
 
             function mouseout() {
@@ -283,9 +283,9 @@ d3.profile = function() {
         return profile;
     };
 
-    profile.callback = function(cb) {
-        if (!arguments.length) return callback;
-        callback = cb;
+    profile.hoverCallback = function(cb) {
+        if (!arguments.length) return hoverCallback;
+        hoverCallback = cb;
         return profile;
     };
 
@@ -308,8 +308,8 @@ d3.profile = function() {
             .data(pois, function(d) {
                 console.log(d);
                 var distance = d.distance,
-                    i = bisectDistance(track, distance, 1),
-                    point = track[i];
+                    i = bisectDistance(profile, distance, 1),
+                    point = profile[i];
                 if (point) {
                     d.distance = distance;
                     d.alt = point[2];
