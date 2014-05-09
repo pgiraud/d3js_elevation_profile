@@ -148,7 +148,6 @@ d3.profile = function() {
             } else if (xDomain[1] < 100000) {
                 ratioXY = 0.1;
             }
-            console.log(ratioXY);
             var mean = (yDomain[1] - yDomain[0])  / 2 + yDomain[0];
             var xResolution = (xDomain[1] - xDomain[0]) / width;
             y.domain([mean - (xResolution * ratioXY) * height / 2,
@@ -272,6 +271,7 @@ d3.profile = function() {
             function mouseout() {
                 g.selectAll(".grid-hover")
                     .style('display', 'none');
+                outCallback.call(null);
             }
         });
     }
@@ -286,6 +286,12 @@ d3.profile = function() {
     profile.hoverCallback = function(cb) {
         if (!arguments.length) return hoverCallback;
         hoverCallback = cb;
+        return profile;
+    };
+
+    profile.outCallback = function(cb) {
+        if (!arguments.length) return outCallback;
+        outCallback = cb;
         return profile;
     };
 
