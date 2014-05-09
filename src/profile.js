@@ -39,7 +39,7 @@ d3.profile = function() {
 
             var height = this.getBoundingClientRect().height -
                 margin.top - margin.bottom;
-            y = d4.scale.linear()
+            y = d3.scale.linear()
                 .range([height, 0]);
 
             var xAxis = d3.svg.axis()
