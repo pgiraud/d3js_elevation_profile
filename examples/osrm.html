@@ -50,13 +50,16 @@
                         return;
                     }
                     var data = {
-                        track: track,
-                        pois: {
-                            features: []
-                        }
+                        track: track
                     };
                     sel.datum(data).call(profile);
                     sel2.datum(data).call(profile2);
+
+                    profile.showPois([{
+                        distance: 5000,
+                        title: 'my poi',
+                        fid: 2
+                    }]);
                 });
         });
     d3.selectAll('button.profile')[0][0].click();
