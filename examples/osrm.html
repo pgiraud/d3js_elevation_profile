@@ -18,6 +18,7 @@
 <div id="profiles">Choose a profile:<br/></div>
 <div id="chart"></div>
 <button id="export">Export as SVG</button>
+<button id="new_meta">Load new meta</button>
 <div id="chart_light"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/queue.v1.min.js"></script>
@@ -63,12 +64,25 @@
                     }];
                     profileSel.showPois(pois);
                     profile2Sel.showPois(pois);
+
+                    var meta = {
+                        length: "12 km",
+                        hiking: "5 h",
+                        biking: "37 min",
+                        totaldown: "40 m",
+                        totalup: "457 m"
+                    };
+                    profileSel.showMeta(meta);
                 });
         });
     d3.selectAll('button.profile')[0][0].click();
 
     d3.select('#export').on('click', function() {
-        var blob = new Blob([profile.asText()], {type: "image/svg+xml"});
+        var blob = new Blob([profileSel.asText()], {type: "image/svg+xml"});
         saveAs(blob, "myProfile.svg");
+    });
+    d3.select('#new_meta').on('click', function() {
+        var meta = {length: "15", hiking: "doo", biking: "bar", totaldown: "dude", totalup: "truite"};
+        profileSel.showMeta(meta);
     });
 </script>

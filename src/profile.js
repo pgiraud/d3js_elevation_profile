@@ -14,7 +14,7 @@ d3.locale.fr_FR = d3.locale({
 });
 d3.profile = function() {
 
-    var margin = {top: 40, right: 50, bottom: 30, left: 50},
+    var margin = {top: 40, right: 100, bottom: 30, left: 50},
         light = false,
         bisectDistance = d3.bisector(function(d) { return d[3]; }).left,
         units,
@@ -97,6 +97,9 @@ d3.profile = function() {
                     .attr("transform", "rotate(-90)")
                     .text("elevation (m)");
 
+                gEnter.append("g")
+                    .attr("class", "metas")
+                    .attr("transform", "translate(" + (width + 3) + ", 0)");
             }
 
             gEnter.append('g').attr("class", "pois");
@@ -300,6 +303,8 @@ d3.profile = function() {
         return  svg
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
+            // hack: doubling xmlns: so it doesn't disappear once in the DOM
+            .attr("xmlns:xmlns:xlink", "http://www.w3.org/1999/xlink")
             .node().parentNode.innerHTML;
     };
 
@@ -358,6 +363,51 @@ d3.profile = function() {
 
         poiEnter.selectAll('line')
              .style("shape-rendering", "crispEdges");
+    };
+
+    profile.showMeta = function(meta) {
+        var g = svg.select('g');
+        var metas = g.select('.metas');
+
+        var params = [
+            "length",
+            "totaldown",
+            "totalup",
+            "hiking",
+            "biking"
+        ];
+
+        var m = metas.selectAll(".meta")
+                    .data(params);
+
+        var metaEnter = m.enter();
+
+        var iw = 37; // image width
+        var ih = 18; // image height
+        var tw = 45; // text width
+        metaEnter
+            .append("image")
+            .attr("xlink:href", function(d) {
+                return "http://mf-chmobil2.dev.bgdi.ch/~pierre/images/m_" + d + ".png";
+            })
+            .attr('y', function(d, i) { return i * (ih + 3) + 'px'; })
+            .attr("width", iw)
+            .attr("height", ih);
+
+        metaEnter
+            .append("text")
+            .attr('class', function(d) {
+                return "meta " + d;
+            })
+            .attr('y', function(d, i) {
+                return i * (ih + 3) + 'px';
+            })
+            .attr('x', function(d, i) { return iw  + 3 + "px";})
+            .attr('y', function(d, i) { return i * (ih + 3) + ih - 5 + 'px'; });
+
+        d3.set(params).forEach(function(param) {
+            g.select('.meta.' + param).text(meta[param]);
+        });
     };
 
     return profile;
