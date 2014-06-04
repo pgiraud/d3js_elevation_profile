@@ -97,8 +97,9 @@ d3.profile = function() {
                     .attr("transform", "rotate(-90)")
                     .text("elevation (m)");
 
-                gEnter.append('g').attr("class", "pois");
             }
+
+            gEnter.append('g').attr("class", "pois");
 
             var yHover = gEnter.append('g').attr('class', 'y grid-hover');
             yHover.append("svg:line").attr('stroke-dasharray', '5,5');
@@ -218,7 +219,7 @@ d3.profile = function() {
 
             function mousemove() {
                 var mouseX = d3.mouse(this)[0],
-                    x0 = x.invert(mouseX),
+                    x0 = Math.round(x.invert(mouseX) * 10) / 10,
                     i = bisectDistance(profile, x0, 1),
                     point = profile[i];
 
@@ -296,7 +297,7 @@ d3.profile = function() {
     };
 
     profile.asText = function() {
-        return  d3.select("svg")
+        return  svg
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .node().parentNode.innerHTML;
@@ -305,19 +306,15 @@ d3.profile = function() {
     profile.showPois = function(pois) {
         var g = svg.select('g');
         var ps = g.select('.pois');
-        console.log(ps);
 
         // remove any previously existing pois
         // Note: not using exit() here cause poi id may already exist
         ps.selectAll(".poi").remove();
         var p = ps.selectAll(".poi")
             .data(pois, function(d) {
-                console.log(d);
-                var distance = d.distance,
-                    i = bisectDistance(profile, distance, 1),
+                var i = bisectDistance(profile, Math.round(d.distance * 10) / 10, 1),
                     point = profile[i];
                 if (point) {
-                    d.distance = distance;
                     d.alt = point[2];
                 }
                 return d.id;
@@ -334,15 +331,23 @@ d3.profile = function() {
             .delay(100)
             .style("opacity", 1);
 
-        poiEnter
+        var t = poiEnter
             .append("text")
-            .attr("x", 9)
+            .attr("x", light ? 0 : 9)
             .attr("dy", ".35em")
+            .attr("text-anchor", light ? "middle" : "start")
             .attr("transform", function(d) {
-                return ["translate(", x(d.distance), ",",
-                        (y(d.alt) - 20), "), rotate(-60)"].join("");
+                if (light) {
+                    return ["translate(", x(d.distance), ",",
+                            (y(d.alt) - 10), ")"].join("");
+                } else {
+                    return ["translate(", x(d.distance), ",",
+                            (y(d.alt) - 20), ") rotate(-60)"].join("");
+                }
             })
-            .text(function(d) { return d.title; });
+            .text(function(d) {
+                return d.sort + (light ? '' : (' - ' + d.title));
+            });
 
         poiEnter.append("line")
              .style("stroke", "grey")

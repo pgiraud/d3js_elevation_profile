@@ -55,11 +55,14 @@
                     sel.datum(data).call(profileSel);
                     sel2.datum(data).call(profile2Sel);
 
-                    profileSel.showPois([{
+                    var pois = [{
                         distance: 5000,
                         title: 'my poi',
+                        sort: 1,
                         fid: 2
-                    }]);
+                    }];
+                    profileSel.showPois(pois);
+                    profile2Sel.showPois(pois);
                 });
         });
     d3.selectAll('button.profile')[0][0].click();
