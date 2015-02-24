@@ -2,7 +2,7 @@
  */
 d3.locale.fr_FR = d3.locale({
   'decimal': '.',
-  'thousands': '\'',
+  'thousands': ' ',
   'grouping': [3],
   'currency': ['$', ''],
   'dateTime': '%a %b %e %X %Y',
