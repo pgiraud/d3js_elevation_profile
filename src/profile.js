@@ -25,7 +25,7 @@ d3.profile = function() {
   /**
    * The values for margins around the chart defined in pixels.
    */
-  var margin = {top: 40, right: 30, bottom: 30, left: 50};
+  var margin = {top: 10, right: 10, bottom: 30, left: 40};
 
   /**
    * Method to get the coordinate in pixels from a distance.
