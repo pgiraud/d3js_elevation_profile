@@ -108,6 +108,7 @@ d3.profile = function() {
           .attr('y', 6)
           .attr('dy', '.75em')
           .attr('transform', 'rotate(-90)')
+          .style('fill', 'grey')
           .text('elevation (m)');
 
       gEnter.append('g')
